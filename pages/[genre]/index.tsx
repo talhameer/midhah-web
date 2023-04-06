@@ -1,4 +1,6 @@
+import GenreInfo from "@/models/GenreInfo";
 import Lyrics from "@/models/Lyrics";
+import { genresInfo } from "@/utilities/constants";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
@@ -11,6 +13,8 @@ export default function GenreListPage() {
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [hasMoreData, setHasMoreData] = useState(true);
+
+  const [genreInfo, setGenreInfo] = useState<GenreInfo | null>(null);
 
   const lastLyricRef = useRef<HTMLLIElement>(null);
 
@@ -44,7 +48,9 @@ export default function GenreListPage() {
     setIsLoading(true);
 
     if (genre && hasMoreData) {
-      fetch(`http://api.midhah.com/v2/lyrics/${genre}?page=${page}&size=100`, {
+      setGenreInfo(getPageGenre(genre));
+
+      fetch(`http://api.midhah.com/v2/lyrics/${genre}?page=${page}&size=30`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -65,15 +71,23 @@ export default function GenreListPage() {
     }
   }, [genre, hasMoreData, page]);
 
+  function getPageGenre(genre: string) {
+    return genresInfo.filter((genreInfo) => genreInfo.path === genre)[0];
+  }
+
   return (
     <div className="container mx-auto w-full md:w-[85%]">
-      <div className="relative overflow-hidden naat card mb-5 md:rounded-[10px]">
+      <div
+        className="relative overflow-hidden card mb-5 md:rounded-[10px]"
+        style={{ background: genreInfo?.color }}
+      >
         <div className="py-[60px] md:py-[150px] text-center">
           <h1 className="text-2xl md:text-5xl mb-1 text-white">
-            NAAT E RASOOL
+            {genreInfo?.title}
           </h1>
         </div>
       </div>
+
       <ul className="md:grid md:grid-cols-2 w-full">
         {lyrics.map((lyric: Lyrics, index: number) => (
           <Link href={`/${genre}/${lyric.slug}`} key={lyric.slug}>
