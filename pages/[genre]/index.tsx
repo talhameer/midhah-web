@@ -1,3 +1,4 @@
+import Loader from "@/components/Loader";
 import GenreInfo from "@/models/GenreInfo";
 import Lyrics from "@/models/Lyrics";
 import { genresInfo } from "@/utilities/constants";
@@ -88,25 +89,29 @@ export default function GenreListPage() {
         </div>
       </div>
 
-      <ul className="md:grid md:grid-cols-2 w-full">
-        {lyrics.map((lyric: Lyrics, index: number) => (
-          <Link href={`/${genre}/${lyric.slug}`} key={lyric.slug}>
-            <li
-              className="flex flex-row my-1"
-              ref={index === lyrics.length - 1 ? lastLyricRef : undefined}
-            >
-              <div className="select-none cursor-pointer hover:bg-gray-50 flex flex-1 items-center p-4">
-                <div className="flex-1 pl-1 mr-16">
-                  <div className="text-gray-600  ">{lyric.title}</div>
-                  <span className="text-gray-400  text-sm uppercase">
-                    {lyric.genre}
-                  </span>
+      <main className="flex items-center justify-center flex-col min-h-[calc(100vh-575px)]">
+        <ul className="md:grid md:grid-cols-2 w-full">
+          {lyrics.map((lyric: Lyrics, index: number) => (
+            <Link href={`/${genre}/${lyric.slug}`} key={lyric.slug}>
+              <li
+                className="flex flex-row my-1"
+                ref={index === lyrics.length - 1 ? lastLyricRef : undefined}
+              >
+                <div className="select-none cursor-pointer hover:bg-gray-50 flex flex-1 items-center p-4">
+                  <div className="flex-1 pl-1 mr-16">
+                    <div className="text-gray-600  ">{lyric.title}</div>
+                    <span className="text-gray-400  text-sm uppercase">
+                      {lyric.genre}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </li>
-          </Link>
-        ))}
-      </ul>
+              </li>
+            </Link>
+          ))}
+        </ul>
+
+        {isLoading && <Loader />}
+      </main>
     </div>
   );
 }
