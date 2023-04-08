@@ -51,7 +51,7 @@ export default function GenreListPage() {
     if (genre && hasMoreData) {
       setGenreInfo(getPageGenre(genre));
 
-      fetch(`http://api.midhah.com/v2/lyrics/${genre}?page=${page}&size=30`, {
+      fetch(`https://api.midhah.com/v2/lyrics/${genre}?page=${page}&size=30`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
